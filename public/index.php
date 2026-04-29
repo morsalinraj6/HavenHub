@@ -1,11 +1,19 @@
 <?php
+// 🔥 ERROR SHOW (very important for debug)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// 🔧 REQUIRED FILES
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../app/helpers/functions.php';
+
 require_once __DIR__ . '/../app/models/User.php';
 require_once __DIR__ . '/../app/models/Room.php';
 require_once __DIR__ . '/../app/models/Booking.php';
 require_once __DIR__ . '/../app/models/Service.php';
 require_once __DIR__ . '/../app/models/Payment.php';
+
 require_once __DIR__ . '/../app/controllers/HomeController.php';
 require_once __DIR__ . '/../app/controllers/AuthController.php';
 require_once __DIR__ . '/../app/controllers/BookingController.php';
@@ -13,11 +21,14 @@ require_once __DIR__ . '/../app/controllers/DashboardController.php';
 require_once __DIR__ . '/../app/controllers/RoomController.php';
 require_once __DIR__ . '/../app/controllers/ServiceController.php';
 
+// 🔌 DATABASE CONNECT
 $db = Database::connect();
 
+// 🔁 ROUTE GET
 $route = $_GET['route'] ?? '';
 $route = trim($route, '/');
 
+// 🎮 CONTROLLERS INIT
 $homeController = new HomeController($db);
 $authController = new AuthController($db);
 $bookingController = new BookingController($db);
@@ -25,6 +36,7 @@ $dashboardController = new DashboardController($db);
 $roomController = new RoomController($db);
 $serviceController = new ServiceController($db);
 
+// 🚀 ROUTER
 switch ($route) {
 
     case '':
@@ -75,7 +87,7 @@ switch ($route) {
         $dashboardController->index();
         break;
 
-    // 🔥 PROFILE ROUTE ADDED
+    // 🔥 PROFILE ROUTE
     case 'profile':
         $authController->profile();
         break;

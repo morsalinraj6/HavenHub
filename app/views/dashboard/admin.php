@@ -1,132 +1,139 @@
 <?php include __DIR__ . '/../layouts/header.php'; ?>
 
-<h2 class="fw-bold mb-4">Admin Dashboard</h2>
-
-<!-- 🔥 STATS CARDS -->
-<div class="row g-4 mb-4">
-
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100 text-center p-4">
-            <i class="bi bi-currency-dollar fs-2 text-success mb-2"></i>
-            <h6 class="text-muted">Total Revenue</h6>
-            <h2 class="fw-bold"><?= format_money($revenue); ?></h2>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100 text-center p-4">
-            <i class="bi bi-calendar-check fs-2 text-primary mb-2"></i>
-            <h6 class="text-muted">Total Bookings</h6>
-            <h2 class="fw-bold"><?= count($bookings); ?></h2>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100 text-center p-4">
-            <i class="bi bi-door-open fs-2 text-warning mb-2"></i>
-            <h6 class="text-muted">Room Categories</h6>
-            <h2 class="fw-bold"><?= count($statusCounts); ?></h2>
-        </div>
-    </div>
-
-</div>
-
 <div class="row g-4">
 
-    <!-- 🔥 ROOM STATUS -->
-    <div class="col-lg-4">
-        <div class="card border-0 shadow-sm h-100">
+    <!-- Sidebar -->
+    <div class="col-lg-3">
+        <div class="card border-0 shadow-sm rounded-4">
             <div class="card-body">
-                <h5 class="fw-bold mb-3">Room Status Overview</h5>
+                <h5 class="fw-bold mb-4">Admin Panel</h5>
 
-                <?php foreach ($statusCounts as $status): ?>
+                <div class="list-group list-group-flush">
+                    <a href="<?= BASE_URL; ?>/dashboard" class="list-group-item list-group-item-action active">
+                        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                    </a>
 
-                    <?php
-                        $color = $status['status'] === 'Available' ? 'success' :
-                                 ($status['status'] === 'Occupied' ? 'danger' : 'warning');
-                    ?>
+                    <a href="<?= BASE_URL; ?>/admin/rooms" class="list-group-item list-group-item-action">
+                        <i class="bi bi-door-open me-2"></i> Manage Rooms
+                    </a>
 
-                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                        <span><?= htmlspecialchars($status['status']); ?></span>
+                    <a href="<?= BASE_URL; ?>/bookings/manage" class="list-group-item list-group-item-action">
+                        <i class="bi bi-calendar-check me-2"></i> Bookings
+                    </a>
 
-                        <span class="badge bg-<?= $color; ?> px-3 py-2 rounded-pill">
-                            <?= (int)$status['total']; ?>
-                        </span>
-                    </div>
-
-                <?php endforeach; ?>
-
+                    <a href="<?= BASE_URL; ?>/logout" class="list-group-item list-group-item-action text-danger">
+                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 🔥 RECENT BOOKINGS -->
-    <div class="col-lg-8">
-        <div class="card border-0 shadow-sm h-100">
+    <!-- Main Dashboard -->
+    <div class="col-lg-9">
 
-            <div class="card-body p-0">
+        <h2 class="fw-bold mb-4">Admin Dashboard</h2>
 
-                <div class="p-4 pb-2">
-                    <h5 class="fw-bold mb-0">Recent Bookings</h5>
+        <!-- Stats -->
+        <div class="row g-4 mb-4">
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-4">
+                    <i class="bi bi-cash-stack fs-2 text-success mb-2"></i>
+                    <h6 class="text-muted">Total Revenue</h6>
+                    <h2 class="fw-bold"><?= format_money($revenue); ?></h2>
                 </div>
+            </div>
 
-                <div class="table-responsive">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-4">
+                    <i class="bi bi-calendar-check fs-2 text-primary mb-2"></i>
+                    <h6 class="text-muted">Total Bookings</h6>
+                    <h2 class="fw-bold"><?= count($bookings); ?></h2>
+                </div>
+            </div>
 
-                    <table class="table align-middle mb-0">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-4">
+                    <i class="bi bi-building fs-2 text-warning mb-2"></i>
+                    <h6 class="text-muted">Room Groups</h6>
+                    <h2 class="fw-bold"><?= count($statusCounts); ?></h2>
+                </div>
+            </div>
 
-                        <thead class="table-light">
-                            <tr>
-                                <th>Guest</th>
-                                <th>Room</th>
-                                <th>Dates</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
+        </div>
 
-                        <tbody>
+        <div class="row g-4">
 
-                        <?php foreach (array_slice($bookings, 0, 8) as $booking): ?>
+            <!-- Room Status -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">Room Status Overview</h5>
 
+                        <?php foreach ($statusCounts as $status): ?>
                             <?php
-                                $statusColor = $booking['status'] === 'Confirmed' ? 'success' :
-                                               ($booking['status'] === 'Pending' ? 'warning' : 'secondary');
+                                $color = $status['status'] === 'Available' ? 'success' :
+                                        ($status['status'] === 'Occupied' ? 'danger' : 'warning');
                             ?>
 
-                            <tr>
-                                <td><?= htmlspecialchars($booking['guest_name']); ?></td>
-
-                                <td>
-                                    <span class="fw-semibold">
-                                        <?= htmlspecialchars($booking['room_number']); ?>
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <small>
-                                        <?= htmlspecialchars($booking['check_in']); ?><br>
-                                        → <?= htmlspecialchars($booking['check_out']); ?>
-                                    </small>
-                                </td>
-
-                                <td>
-                                    <span class="badge bg-<?= $statusColor; ?> px-3 py-2 rounded-pill">
-                                        <?= htmlspecialchars($booking['status']); ?>
-                                    </span>
-                                </td>
-                            </tr>
-
+                            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                <span><?= htmlspecialchars($status['status']); ?></span>
+                                <span class="badge bg-<?= $color; ?> rounded-pill px-3 py-2">
+                                    <?= (int)$status['total']; ?>
+                                </span>
+                            </div>
                         <?php endforeach; ?>
-
-                        </tbody>
-
-                    </table>
-
+                    </div>
                 </div>
-
             </div>
-        </div>
-    </div>
 
+            <!-- Recent Bookings -->
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-body p-0">
+                        <div class="p-4 pb-2">
+                            <h5 class="fw-bold mb-0">Recent Bookings</h5>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Guest</th>
+                                        <th>Room</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <?php foreach (array_slice($bookings, 0, 8) as $booking): ?>
+                                        <?php
+                                            $statusColor = $booking['status'] === 'Confirmed' ? 'success' :
+                                                        ($booking['status'] === 'Pending' ? 'warning' : 'secondary');
+                                        ?>
+
+                                        <tr>
+                                            <td><?= htmlspecialchars($booking['guest_name']); ?></td>
+                                            <td><?= htmlspecialchars($booking['room_number']); ?></td>
+                                            <td>
+                                                <span class="badge bg-<?= $statusColor; ?> rounded-pill px-3 py-2">
+                                                    <?= htmlspecialchars($booking['status']); ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>
